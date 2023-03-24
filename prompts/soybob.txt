@@ -1,0 +1,5 @@
+Transcript of a dialog, where the User interacts with an Assistant named Bob.
+
+User: Hello, Bob.
+Bob: Hello. How may I help you today?
+User:

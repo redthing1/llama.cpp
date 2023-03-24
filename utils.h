@@ -39,6 +39,7 @@ struct gpt_params {
     bool use_color         = false; // use color to distinguish generations and inputs
     bool interactive       = false; // interactive mode
     bool interactive_start = false; // wait for user input immediately
+    bool puppet            = false; // puppet mode (used for server operation)
     bool instruct          = false; // instruction mode (used for Alpaca models)
     bool ignore_eos        = false; // do not stop generating after eos
     bool perplexity        = false; // compute perplexity over the prompt

@@ -19,6 +19,7 @@ build-sanitize-thread/
 models/*
 
 /main
+/puppet
 /quantize
 /result
 

@@ -211,7 +211,7 @@ $(info I CC:       $(CCV))
 $(info I CXX:      $(CXXV))
 $(info )
 
-default: main quantize
+default: main quantize puppet
 
 #
 # Build library
@@ -234,6 +234,9 @@ main: main.cpp ggml.o llama.o utils.o
 	@echo
 	@echo '====  Run ./main -h for help.  ===='
 	@echo
+
+puppet: puppet.cpp ggml.o llama.o utils.o
+	$(CXX) $(CXXFLAGS) puppet.cpp ggml.o llama.o utils.o -o puppet $(LDFLAGS)
 
 quantize: quantize.cpp ggml.o llama.o utils.o
 	$(CXX) $(CXXFLAGS) quantize.cpp ggml.o llama.o utils.o -o quantize $(LDFLAGS)

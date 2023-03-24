@@ -312,7 +312,9 @@ int main(int argc, char ** argv) {
                " - Press Ctrl+C to interject at any time.\n"
 #endif
                " - Press Return to return control to LLaMa.\n"
-               " - If you want to submit another line, end your input in '\\'.\n\n");
+               " - If you want to submit another line, end your input in '\\'.\n"
+               "====\n"
+               "\n");
         is_interacting = params.interactive_start || params.instruct;
     }
 

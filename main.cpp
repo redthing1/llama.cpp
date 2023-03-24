@@ -289,6 +289,13 @@ int main(int argc, char ** argv) {
             }
         }
     }
+
+
+    if (params.puppet) {
+        fprintf(stderr, "%s: puppet mode is enabled. for optimal use, set n_predict to 1.\n", __func__);
+    }
+
+
     fprintf(stderr, "sampling parameters: temp = %f, top_k = %d, top_p = %f, repeat_last_n = %i, repeat_penalty = %f\n", params.temp, params.top_k, params.top_p, params.repeat_last_n, params.repeat_penalty);
     fprintf(stderr, "\n\n");
 
@@ -421,6 +428,7 @@ int main(int argc, char ** argv) {
         if (!input_noecho) {
             for (auto id : embd) {
                 printf("%s", llama_token_to_str(ctx, id));
+                // fprintf(stderr, "[printed %d tokens]", (int)embd.size());
             }
             fflush(stdout);
         }
@@ -469,6 +477,13 @@ int main(int argc, char ** argv) {
                     buffer += line + '\n'; // Append the line to the result
                 } while (another_line);
 
+                if (params.puppet) {
+                    // strip final newline
+                    if (buffer.back() == '\n') { buffer.pop_back(); }
+                }
+
+                // fprintf(stderr, "[got input: %s]", buffer.c_str());
+
                 // done taking input, reset color
                 set_console_state(CONSOLE_STATE_DEFAULT);
 
@@ -498,6 +513,7 @@ int main(int argc, char ** argv) {
 
         // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
         if (params.interactive && remaining_tokens <= 0) {
+            // fprintf(stderr, "[max tokens reached: %d]", params.n_predict);
             remaining_tokens = params.n_predict;
             is_interacting = true;
         }

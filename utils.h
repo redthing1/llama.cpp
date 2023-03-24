@@ -32,17 +32,20 @@ struct gpt_params {
     std::string model  = "models/lamma-7B/ggml-model.bin"; // model path
     std::string prompt = "";
 
+
     std::vector<std::string> antiprompt; // string upon seeing which more user input is prompted
 
     bool memory_f16        = false; // use f16 instead of f32 for memory kv
     bool random_prompt     = false; // do not randomize prompt if none provided
     bool use_color         = false; // use color to distinguish generations and inputs
     bool interactive       = false; // interactive mode
-    bool interactive_start = false; // wait for user input immediately
     bool puppet            = false; // puppet mode (used for server operation)
+    bool embedding         = false; // get only sentence embedding
+    bool interactive_start = false; // wait for user input immediately
     bool instruct          = false; // instruction mode (used for Alpaca models)
     bool ignore_eos        = false; // do not stop generating after eos
     bool perplexity        = false; // compute perplexity over the prompt
+    bool use_mlock         = false; // use mlock to keep model in memory
 };
 
 bool gpt_params_parse(int argc, char ** argv, gpt_params & params);

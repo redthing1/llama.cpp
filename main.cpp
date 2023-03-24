@@ -199,6 +199,8 @@ int main(int argc, char ** argv) {
         lparams.seed       = params.seed;
         lparams.f16_kv     = params.memory_f16;
         lparams.logits_all = params.perplexity;
+        lparams.use_mlock  = params.use_mlock;
+        lparams.embedding  = params.embedding;
 
         ctx = llama_init_from_file(params.model.c_str(), lparams);
 
@@ -292,6 +294,7 @@ int main(int argc, char ** argv) {
 
     std::vector<llama_token> embd;
 
+
     int last_n_size = params.repeat_last_n;
     std::vector<llama_token> last_n_tokens(last_n_size);
     std::fill(last_n_tokens.begin(), last_n_tokens.end(), 0);
@@ -323,6 +326,27 @@ int main(int argc, char ** argv) {
 #endif
     // the first thing we will do is to output the prompt, so set color accordingly
     set_console_state(CONSOLE_STATE_PROMPT);
+
+    if (params.embedding){
+        embd = embd_inp;
+
+        if (embd.size() > 0) {
+            if (llama_eval(ctx, embd.data(), embd.size(), n_past, params.n_threads)) {
+                fprintf(stderr, "%s : failed to eval\n", __func__);
+                return 1;
+            }
+        }
+
+        const auto embeddings = llama_get_embeddings(ctx);
+
+        // TODO: print / use the embeddings
+
+        if (params.use_color) {
+            printf(ANSI_COLOR_RESET);
+        }
+
+        return 0;
+    }
 
     while (remaining_tokens > 0 || params.interactive) {
         // predict
@@ -363,7 +387,7 @@ int main(int argc, char ** argv) {
             }
 
             // replace end of text token with newline token when in interactive mode
-            if (id == llama_token_eos() && params.interactive) {
+            if (id == llama_token_eos() && params.interactive && !params.instruct) {
                 id = llama_token_newline.front();
                 if (params.antiprompt.size() != 0) {
                     // tokenize and inject first reverse prompt
@@ -464,8 +488,12 @@ int main(int argc, char ** argv) {
 
         // end of text token
         if (embd.back() == llama_token_eos()) {
-            fprintf(stderr, " [end of text]\n");
-            break;
+            if (params.instruct) {
+                is_interacting = true;
+            } else {
+                fprintf(stderr, " [end of text]\n");
+                break;
+            }
         }
 
         // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.

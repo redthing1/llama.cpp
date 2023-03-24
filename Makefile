@@ -156,7 +156,8 @@ endif
 ifneq ($(filter ppc64%,$(UNAME_M)),)
 	POWER9_M := $(shell grep "POWER9" /proc/cpuinfo)
 	ifneq (,$(findstring POWER9,$(POWER9_M)))
-		CFLAGS += -mpower9-vector
+		CFLAGS += -mcpu=power9
+		CXXFLAGS += -mcpu=power9
 	endif
 	# Require c++23's std::byteswap for big-endian support.
 	ifeq ($(UNAME_M),ppc64)
@@ -211,7 +212,7 @@ $(info I CC:       $(CCV))
 $(info I CXX:      $(CXXV))
 $(info )
 
-default: main quantize puppet
+default: main quantize
 
 #
 # Build library
@@ -234,9 +235,6 @@ main: main.cpp ggml.o llama.o utils.o
 	@echo
 	@echo '====  Run ./main -h for help.  ===='
 	@echo
-
-puppet: puppet.cpp ggml.o llama.o utils.o
-	$(CXX) $(CXXFLAGS) puppet.cpp ggml.o llama.o utils.o -o puppet $(LDFLAGS)
 
 quantize: quantize.cpp ggml.o llama.o utils.o
 	$(CXX) $(CXXFLAGS) quantize.cpp ggml.o llama.o utils.o -o quantize $(LDFLAGS)

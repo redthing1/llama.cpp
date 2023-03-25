@@ -487,9 +487,9 @@ int main(int argc, char ** argv) {
                     printf("\n> ");
                 }
 
-                if (params.puppet) {
-                    fprintf(stderr, "[input]\n");
-                }
+                // if (params.puppet) {
+                //     fprintf(stderr, "[input]\n");
+                // }
 
                 std::string buffer;
                 std::string line;
@@ -545,6 +545,7 @@ int main(int argc, char ** argv) {
         // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
         if (params.interactive && remaining_tokens <= 0) {
             // fprintf(stderr, "[remaining tokens <= 0]\n");
+            fprintf(stderr, "[_]\n");
             remaining_tokens = params.n_predict;
             is_interacting = true;
         }

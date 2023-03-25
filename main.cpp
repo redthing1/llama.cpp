@@ -448,6 +448,7 @@ int main(int argc, char ** argv) {
 
         // in interactive mode, and not currently processing queued inputs;
         // check if we should prompt the user for more
+        bool did_take_input = false;
         if (params.interactive && (int) embd_inp.size() <= input_consumed) {
             // check for reverse prompt
             std::string last_output;
@@ -483,6 +484,11 @@ int main(int argc, char ** argv) {
                 //     fprintf(stderr, "[input]\n");
                 // }
 
+                if (params.puppet) {
+                    fprintf(stdout, "§");
+                    fflush(stdout);
+                }
+
                 std::string buffer;
                 std::string line;
                 bool another_line = true;
@@ -500,6 +506,7 @@ int main(int argc, char ** argv) {
                     // strip final newline
                     if (buffer.back() == '\n') { buffer.pop_back(); }
                 }
+                did_take_input = true;
 
                 if (params.puppet) {
                     // fprintf(stderr, "[in: '%s']\n", buffer.c_str());
@@ -517,7 +524,7 @@ int main(int argc, char ** argv) {
                     embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
                 }
 
-                remaining_tokens -= line_inp.size();
+                // remaining_tokens -= line_inp.size();
 
                 input_noecho = true; // do not echo this again
             }
@@ -536,12 +543,6 @@ int main(int argc, char ** argv) {
 
         // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
         if (params.interactive && remaining_tokens <= 0) {
-            // fprintf(stderr, "[remaining tokens <= 0]\n");
-            // fprintf(stderr, "[_]\n");
-            // fflush(stderr);
-            // fprintf(stdout, "§");
-            fprintf(stdout, "§");
-            fflush(stdout);
             remaining_tokens = params.n_predict;
             is_interacting = true;
         }

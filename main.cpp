@@ -460,6 +460,16 @@ int main(int argc, char ** argv) {
                 }
             }
             if (is_interacting) {
+                if (!seed_prompt_consumed) {
+                    // if the seed prompt was not marked consumed
+                    // that means that we just finished all the seed prompt tokens
+                    seed_prompt_consumed = true;
+                    if (params.puppet) {
+                        // send data to stderr indicating the seed prompt is done
+                        fprintf(stderr, "[seed prompt done]\n");
+                    }
+                }
+
                 // potentially set color to indicate we are taking user input
                 set_console_state(CONSOLE_STATE_USER_INPUT);
 
@@ -520,15 +530,6 @@ int main(int argc, char ** argv) {
         // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
         if (params.interactive && remaining_tokens <= 0) {
             // fprintf(stderr, "[remaining tokens <= 0]\n");
-            if (!seed_prompt_consumed) {
-                // if the seed prompt was not marked consumed
-                // that means that we just finished all the seed prompt tokens
-                seed_prompt_consumed = true;
-                if (params.puppet) {
-                    // send data to stderr indicating the seed prompt is done
-                    fprintf(stderr, "[seed prompt done]\n");
-                }
-            }
             remaining_tokens = params.n_predict;
             is_interacting = true;
         }

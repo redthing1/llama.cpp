@@ -432,7 +432,12 @@ int main(int argc, char ** argv) {
         // display text
         if (!input_noecho) {
             for (auto id : embd) {
+                // fprintf(stderr, "[");
+                // fflush(stderr);
                 printf("%s", llama_token_to_str(ctx, id));
+                fflush(stdout);
+                // fprintf(stderr, "]");
+                // fflush(stderr);
                 // fprintf(stderr, "[printed %d tokens]", (int)embd.size());
             }
             fflush(stdout);
@@ -454,7 +459,9 @@ int main(int argc, char ** argv) {
             // Check if each of the reverse prompts appears at the end of the output.
             for (std::string antiprompt : params.antiprompt) {
                 if (last_output.find(antiprompt.c_str(), last_output.length() - antiprompt.length(), antiprompt.length()) != std::string::npos) {
-                    // fprintf(stderr, "[antiprompt]\n");
+                    if (params.puppet) {
+                        fprintf(stderr, "[antiprompt]\n");
+                    }
                     is_interacting = true;
                     break;
                 }
@@ -480,6 +487,10 @@ int main(int argc, char ** argv) {
                     printf("\n> ");
                 }
 
+                if (params.puppet) {
+                    fprintf(stderr, "[input]\n");
+                }
+
                 std::string buffer;
                 std::string line;
                 bool another_line = true;
@@ -496,6 +507,10 @@ int main(int argc, char ** argv) {
                 if (params.puppet) {
                     // strip final newline
                     if (buffer.back() == '\n') { buffer.pop_back(); }
+                }
+
+                if (params.puppet) {
+                    fprintf(stderr, "[in: '%s']\n", buffer.c_str());
                 }
 
                 // fprintf(stderr, "[got input: %s]", buffer.c_str());

@@ -450,6 +450,7 @@ int main(int argc, char ** argv) {
             // Check if each of the reverse prompts appears at the end of the output.
             for (std::string antiprompt : params.antiprompt) {
                 if (last_output.find(antiprompt.c_str(), last_output.length() - antiprompt.length(), antiprompt.length()) != std::string::npos) {
+                    // fprintf(stderr, "[antiprompt]\n");
                     is_interacting = true;
                     break;
                 }
@@ -514,7 +515,7 @@ int main(int argc, char ** argv) {
 
         // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
         if (params.interactive && remaining_tokens <= 0) {
-            // fprintf(stderr, "[max tokens reached: %d]", params.n_predict);
+            // fprintf(stderr, "[remaining tokens <= 0]\n");
             if (!seed_prompt_consumed) {
                 // if the seed prompt was not marked consumed
                 // that means that we just finished all the seed prompt tokens

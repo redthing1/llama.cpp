@@ -1,5 +1,5 @@
-Transcript of a dialog.
+Transcript of a dialog. Bob always responds with one word.
 
 User: Hello.
-Bob: Hello.
+Bob: Hi.
 User:

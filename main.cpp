@@ -461,6 +461,7 @@ int main(int argc, char ** argv) {
                 if (last_output.find(antiprompt.c_str(), last_output.length() - antiprompt.length(), antiprompt.length()) != std::string::npos) {
                     if (params.puppet) {
                         fprintf(stderr, "[antiprompt]\n");
+                        fflush(stderr);
                     }
                     is_interacting = true;
                     break;
@@ -546,6 +547,7 @@ int main(int argc, char ** argv) {
         if (params.interactive && remaining_tokens <= 0) {
             // fprintf(stderr, "[remaining tokens <= 0]\n");
             fprintf(stderr, "[_]\n");
+            fflush(stderr);
             remaining_tokens = params.n_predict;
             is_interacting = true;
         }

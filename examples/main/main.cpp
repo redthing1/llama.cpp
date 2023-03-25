@@ -11,6 +11,10 @@
 #include <string>
 #include <vector>
 
+const char* SYMBOL_READY = "✾";
+const char* SYMBOL_ANTIPROMPT = "✧";
+const char* SYMBOL_TOKEN_END = "§";
+
 #if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
 #include <signal.h>
 #include <unistd.h>
@@ -285,7 +289,8 @@ int main(int argc, char ** argv) {
     }
     if (params.puppet) {
         // print a ready signal
-        fprintf(stderr, "[ready]\n");
+        fprintf(stderr, SYMBOL_READY);
+        fflush(stderr);
     }
 
     bool input_noecho = false;
@@ -421,7 +426,7 @@ int main(int argc, char ** argv) {
                     if (params.puppet) {
                         // fprintf(stderr, "[antiprompt]\n");
                         // fflush(stderr);
-                        fprintf(stdout, "✧");
+                        fprintf(stdout, SYMBOL_ANTIPROMPT);
                         fflush(stdout);
                     }
                     is_interacting = true;
@@ -447,7 +452,7 @@ int main(int argc, char ** argv) {
                 // }
 
                 if (params.puppet) {
-                    fprintf(stdout, "§");
+                    fprintf(stdout, SYMBOL_TOKEN_END);
                     fflush(stdout);
                 }
 

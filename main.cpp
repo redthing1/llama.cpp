@@ -318,7 +318,7 @@ int main(int argc, char ** argv) {
     }
     if (params.puppet) {
         // print a ready signal
-        fprintf(stderr, "====\n");
+        fprintf(stderr, "[ready]\n");
     }
 
     int input_consumed = 0;

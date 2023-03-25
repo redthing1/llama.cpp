@@ -316,6 +316,10 @@ int main(int argc, char ** argv) {
                " - If you want to submit another line, end your input in '\\'.\n\n");
         is_interacting = params.interactive_start || params.instruct;
     }
+    if (params.puppet) {
+        // print a ready signal
+        fprintf(stderr, "====\n");
+    }
 
     int input_consumed = 0;
     bool input_noecho = false;

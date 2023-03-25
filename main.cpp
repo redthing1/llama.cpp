@@ -236,7 +236,6 @@ int main(int argc, char ** argv) {
 
     // tokenize the prompt
     auto embd_inp = ::llama_tokenize(ctx, params.prompt, true);
-    bool seed_prompt_consumed = false;
 
     const int n_ctx = llama_n_ctx(ctx);
 
@@ -460,24 +459,16 @@ int main(int argc, char ** argv) {
             for (std::string antiprompt : params.antiprompt) {
                 if (last_output.find(antiprompt.c_str(), last_output.length() - antiprompt.length(), antiprompt.length()) != std::string::npos) {
                     if (params.puppet) {
-                        fprintf(stderr, "[antiprompt]\n");
-                        fflush(stderr);
+                        // fprintf(stderr, "[antiprompt]\n");
+                        // fflush(stderr);
+                        fprintf(stdout, "✧");
+                        fflush(stdout);
                     }
                     is_interacting = true;
                     break;
                 }
             }
             if (is_interacting) {
-                if (!seed_prompt_consumed) {
-                    // if the seed prompt was not marked consumed
-                    // that means that we just finished all the seed prompt tokens
-                    seed_prompt_consumed = true;
-                    if (params.puppet) {
-                        // send data to stderr indicating the seed prompt is done
-                        fprintf(stderr, "[seed prompt done]\n");
-                    }
-                }
-
                 // potentially set color to indicate we are taking user input
                 set_console_state(CONSOLE_STATE_USER_INPUT);
 
@@ -511,7 +502,7 @@ int main(int argc, char ** argv) {
                 }
 
                 if (params.puppet) {
-                    fprintf(stderr, "[in: '%s']\n", buffer.c_str());
+                    // fprintf(stderr, "[in: '%s']\n", buffer.c_str());
                 }
 
                 // fprintf(stderr, "[got input: %s]", buffer.c_str());
@@ -546,8 +537,11 @@ int main(int argc, char ** argv) {
         // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
         if (params.interactive && remaining_tokens <= 0) {
             // fprintf(stderr, "[remaining tokens <= 0]\n");
-            fprintf(stderr, "[_]\n");
-            fflush(stderr);
+            // fprintf(stderr, "[_]\n");
+            // fflush(stderr);
+            // fprintf(stdout, "§");
+            fprintf(stdout, "§");
+            fflush(stdout);
             remaining_tokens = params.n_predict;
             is_interacting = true;
         }

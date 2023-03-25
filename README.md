@@ -17,7 +17,7 @@ Inference of [LLaMA](https://arxiv.org/abs/2302.13971) model in pure C/C++
 The main goal is to run the model using 4-bit quantization on a MacBook
 
 - Plain C/C++ implementation without dependencies
-- Apple silicon first-class citizen - optimized via ARM NEON
+- Apple silicon first-class citizen - optimized via ARM NEON and Accelerate framework
 - AVX2 support for x86 architectures
 - Mixed F16 / F32 precision
 - 4-bit quantization support
@@ -179,7 +179,10 @@ Here is an example few-shot interaction, invoked with the command
 
 ```bash
 # default arguments using 7B model
-./chat.sh
+./examples/chat.sh
+
+# advanced chat with 13B model
+./examples/chat-13B.sh
 
 # custom arguments using 13B model
 ./main -m ./models/13B/ggml-model-q4_0.bin -n 256 --repeat_penalty 1.0 --color -i -r "User:" -f prompts/chat-with-bob.txt
@@ -195,7 +198,7 @@ Note the use of `--color` to distinguish between user input and generated text.
 2. Run the `main` tool like this:
 
 ```
-./main -m ./models/ggml-alpaca-7b-q4.bin --color -f ./prompts/alpaca.txt -ins
+./examples/alpaca.sh
 ```
 
 Sample run:
@@ -322,14 +325,6 @@ or with light image:
 ```bash
 docker run -v /llama/models:/models ghcr.io/ggerganov/llama.cpp:light -m /models/7B/ggml-model-q4_0.bin -p "Building a website can be done in 10 simple steps:" -n 512
 ```
-
-## Limitations
-
-- Probably the token sampling can be improved
-- The Accelerate framework is actually currently unused since I found that for tensor shapes typical for the Decoder,
-  there is no benefit compared to the ARM_NEON intrinsics implementation. Of course, it's possible that I simply don't
-  know how to utilize it properly. But in any case, you can even disable it with `LLAMA_NO_ACCELERATE=1 make` and the
-  performance will be the same, since no BLAS calls are invoked by the current implementation
 
 ### Contributing
 

@@ -22,6 +22,7 @@ models/*
 /puppet
 /quantize
 /result
+/perplexity
 
 arm_neon.h
 compile_commands.json

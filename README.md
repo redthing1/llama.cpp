@@ -1,5 +1,7 @@
 # llama.cpp
 
+![llama](https://user-images.githubusercontent.com/1991296/227761327-6d83e30e-2200-41a6-bfbb-f575231c54f4.png)
+
 [![Actions Status](https://github.com/ggerganov/llama.cpp/workflows/CI/badge.svg)](https://github.com/ggerganov/llama.cpp/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
@@ -246,7 +248,7 @@ cadaver, cauliflower, cabbage (vegetable), catalpa (tree) and Cailleach.
     
 ### Perplexity (Measuring model quality)
 
-You can pass `--perplexity` as a command line option to measure perplexity over the given prompt.  For more background,
+You can use the `perplexity` example to measure perplexity over the given prompt.  For more background,
 see https://huggingface.co/docs/transformers/perplexity.  However, in general, lower perplexity is better for LLMs.
 
 #### Latest measurements
@@ -269,10 +271,10 @@ Perplexity - model options
 #### How to run
 
 1. Download/extract: https://s3.amazonaws.com/research.metamind.io/wikitext/wikitext-2-raw-v1.zip?ref=salesforce-research
-2. Run `./main --perplexity -m models/7B/ggml-model-q4_0.bin -f wiki.test.raw`
+2. Run `./perplexity -m models/7B/ggml-model-q4_0.bin -f wiki.test.raw`
 3. Output:
 ```
-Calculating perplexity over 655 chunks
+perplexity : calculating perplexity over 655 chunks
 24.43 seconds per pass - ETA 4.45 hours
 [1]4.5970,[2]5.1807,[3]6.0382,...
 ```

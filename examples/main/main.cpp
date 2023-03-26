@@ -13,7 +13,7 @@
 
 const char* SYMBOL_READY = "✾";
 const char* SYMBOL_ANTIPROMPT = "✧";
-const char* SYMBOL_TOKEN_END = "§";
+const char* SYMBOL_CONTINUE_POINT = "§";
 
 #if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
 #include <signal.h>
@@ -452,7 +452,7 @@ int main(int argc, char ** argv) {
                 // }
 
                 if (params.puppet) {
-                    fprintf(stdout, SYMBOL_TOKEN_END);
+                    fprintf(stdout, SYMBOL_CONTINUE_POINT);
                     fflush(stdout);
                 }
 

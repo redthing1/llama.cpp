@@ -35,6 +35,10 @@ CFLAGS   = -I.              -O3 -DNDEBUG -std=c11   -fPIC
 CXXFLAGS = -I. -I./examples -O3 -DNDEBUG -std=c++11 -fPIC
 LDFLAGS  =
 
+# warnings
+CFLAGS   += -Wall -Wextra -Wpedantic -Wcast-qual -Wdouble-promotion -Wshadow -Wstrict-prototypes -Wpointer-arith -Wno-unused-function
+CXXFLAGS += -Wall -Wextra -Wpedantic -Wcast-qual -Wno-unused-function
+
 # OS specific
 # TODO: support Windows
 ifeq ($(UNAME_S),Linux)
@@ -67,7 +71,10 @@ endif
 #       feel free to update the Makefile for your architecture and send a pull request or issue
 ifeq ($(UNAME_M),$(filter $(UNAME_M),x86_64 i686))
 	ifeq ($(UNAME_S),Darwin)
-		CFLAGS += -mf16c
+		F16C_M := $(shell sysctl machdep.cpu.features)
+		ifneq (,$(findstring F16C,$(F16C_M)))
+		    CFLAGS += -mf16c
+		endif
 		AVX1_M := $(shell sysctl machdep.cpu.features)
 		ifneq (,$(findstring FMA,$(AVX1_M)))
 			CFLAGS += -mfma
@@ -212,7 +219,7 @@ $(info I CC:       $(CCV))
 $(info I CXX:      $(CXXV))
 $(info )
 
-default: main quantize perplexity
+default: main quantize perplexity embedding
 
 #
 # Build library
@@ -228,7 +235,7 @@ common.o: examples/common.cpp examples/common.h
 	$(CXX) $(CXXFLAGS) -c examples/common.cpp -o common.o
 
 clean:
-	rm -vf *.o main quantize perplexity
+	rm -vf *.o main quantize perplexity embedding
 
 main: examples/main/main.cpp ggml.o llama.o common.o
 	$(CXX) $(CXXFLAGS) examples/main/main.cpp ggml.o llama.o common.o -o main $(LDFLAGS)
@@ -241,6 +248,9 @@ quantize: examples/quantize/quantize.cpp ggml.o llama.o
 
 perplexity: examples/perplexity/perplexity.cpp ggml.o llama.o common.o
 	$(CXX) $(CXXFLAGS) examples/perplexity/perplexity.cpp ggml.o llama.o common.o -o perplexity $(LDFLAGS)
+
+embedding: examples/embedding/embedding.cpp ggml.o llama.o common.o
+	$(CXX) $(CXXFLAGS) examples/embedding/embedding.cpp ggml.o llama.o common.o -o embedding $(LDFLAGS)
 
 #
 # Tests
